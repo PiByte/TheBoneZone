@@ -1,2 +1,3 @@
 # TheBoneZone
-game engine / spelmotor
+2d js game engine
+coming soon, hopefully
