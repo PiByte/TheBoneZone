@@ -1,0 +1,1 @@
+terser *.js -c > Testing\lib\TBZc.js
