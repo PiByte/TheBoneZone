@@ -43,7 +43,7 @@ class Tilemap
 
     /* PRIVATE */
     
-    __DRAW(buffer) // void?
+    __DRAW(buffer) // void
     {
         // draws map to screen
         // should maybe be retricted to only what the camera is seeing so we're not drawing the entire map, when you can only a fraction of it

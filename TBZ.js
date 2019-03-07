@@ -6,20 +6,24 @@ Called first, i guess
 
 class BoneZone
 {
-    constructor(width, height, fps = 60) // BoneZone
+    constructor(width, height, scale = 1, fps = 60) // BoneZone
     {
         // create constants
         this.__WIDTH = width;
         this.__HEIGHT = height;
         this.__FPS = fps;
+        this.__SCALE = scale;
         this.__FRAMEBUFFER = createGraphics(this.__WIDTH, this.__HEIGHT); // framebuffer (should maybe be changed to an array)
 
+        // other useless garbage
         this.__BG_COLOR = 92;
 
+
         // p5.js functions
-        createCanvas(this.__WIDTH, this.__HEIGHT); // main canvas
+        createCanvas(this.__WIDTH * this.__SCALE, this.__HEIGHT * this.__SCALE); // main canvas
         background(this.__BG_COLOR);
         frameRate(this.__FPS);
+        noSmooth(); // p5.js prevents smooth scaling
     }
 
     draw(obj)
@@ -30,12 +34,14 @@ class BoneZone
 
         if (typeof obj.__DRAW === "function") // check if function exists
             obj.__DRAW(this.__FRAMEBUFFER);
+        else
+            console.error("This object can not be drawn to the screen!");
     }
 
     render() // void
     {
         // will copy frame buffer onto main canvas
-        image(this.__FRAMEBUFFER, 0, 0); // p5js
+        image(this.__FRAMEBUFFER, 0, 0, this.__WIDTH * this.__SCALE, this.__HEIGHT * this.__SCALE); // p5js
         this.__FRAMEBUFFER.background(this.__BG_COLOR);
     }
 

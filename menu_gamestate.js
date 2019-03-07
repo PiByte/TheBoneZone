@@ -8,7 +8,7 @@ class Menu
 
     }
 
-    update()
+    onUpdate()
     {
         console.log("Updating,", this.__NAME);
 
@@ -16,9 +16,9 @@ class Menu
 
         Engine.render();
 
-        if (Inputmanager.keys[32])
+        if (keyIsDown(32))
         {
-            Statemanager.changeState("game");
+            State.changeState("game");
         }
     }
 

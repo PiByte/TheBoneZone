@@ -1,1 +1,1 @@
-terser *.js -c > Testing\lib\TBZc.js
+terser *.js -c > lib\TBZc.js

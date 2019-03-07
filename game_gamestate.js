@@ -5,10 +5,11 @@ class Game
         this.__NAME = "game";
 
         this.player_speed = 2;
+        this.player_direction = 1; // up 10, down 1, left 4, right 7
         // this will run when an instance of this class is created
     }
 
-    update()
+    onUpdate()
     {
         // this will run every frame
 
@@ -17,12 +18,33 @@ class Game
         Engine.draw(Thang); // players will hopfully be defined in the classes they belong to instead of the main file
         Engine.draw(Skull);
         Engine.draw(Player);
-        
 
-        if (keyIsDown(UP_ARROW)) { Player.y -= this.player_speed; } // up
-        if (keyIsDown(DOWN_ARROW)) { Player.y += this.player_speed; } // down
-        if (keyIsDown(LEFT_ARROW)) { Player.x -= this.player_speed; } // left
-        if (keyIsDown(RIGHT_ARROW)) { Player.x += this.player_speed; } // right
+        if (keyIsDown(UP_ARROW))
+        {
+            Player.y -= this.player_speed;
+            this.player_direction = 10;   
+        } // up
+        if (keyIsDown(DOWN_ARROW))
+        {
+            Player.y += this.player_speed;
+            this.player_direction = 1;
+        } // down
+        if (keyIsDown(LEFT_ARROW))
+        {
+            Player.x -= this.player_speed;
+            this.player_direction = 4;
+        } // left
+        if (keyIsDown(RIGHT_ARROW))
+        {
+            Player.x += this.player_speed;
+            this.player_direction = 7;
+        } // right
+
+        if (keyIsPressed === true)
+            Player.playAnimation([this.player_direction - 1, this.player_direction, this.player_direction + 1], true, 8);
+        else
+            Player.stopAnimation(this.player_direction);
+
 
         if (this.touching(Player.x, Player.y, 16, 32, Skull.x, Skull.y, 16, 16))
         {
