@@ -10,7 +10,6 @@ class Menu
 
     onUpdate()
     {
-        console.log("Updating,", this.__NAME);
 
         Engine.draw(LOL);
 

@@ -4,7 +4,7 @@ class Game
     {
         this.__NAME = "game";
 
-        this.player_speed = 2;
+        this.player_speed = 1;
         this.player_direction = 1; // up 10, down 1, left 4, right 7
         // this will run when an instance of this class is created
     }
@@ -13,7 +13,7 @@ class Game
     {
         // this will run every frame
 
-        console.log("drawing");
+        Engine.draw(MainMapOne);
 
         Engine.draw(Thang); // players will hopfully be defined in the classes they belong to instead of the main file
         Engine.draw(Skull);
@@ -41,7 +41,7 @@ class Game
         } // right
 
         if (keyIsPressed === true)
-            Player.playAnimation([this.player_direction - 1, this.player_direction, this.player_direction + 1], true, 8);
+            Player.playAnimation([this.player_direction - 1, this.player_direction, this.player_direction + 1], true, 6);
         else
             Player.stopAnimation(this.player_direction);
 

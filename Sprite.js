@@ -5,6 +5,13 @@ will be able to draw them to screen
 you will also be able to manipulate them in various ways
 */
 
+/*
+TODO:
+
+ADD BACK __IS_PLAYING!!
+
+*/
+
 class Sprite
 {
     constructor(x, y, img, tag, sheet = false, tileWidth = 16, tileHeight = 16, defaultFrame = 0) // Sprite
