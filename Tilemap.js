@@ -96,6 +96,8 @@ class Tilemap
         // gets id
     }
 
+    // TODO: add some functions that relate to the collision map
+
     /* PRIVATE */
     
     __DRAW(buffer) // void
@@ -107,20 +109,43 @@ class Tilemap
         // draw layers
 
         // TODO: Make it so this only render the section of the map that the canvas is currently displaying
-
         
 
-
         var layer, Xtile, Ytile;
+
+        var buf = 16;
+
         for (layer = 0; layer < this.__LAYER_COUNT; ++layer)
         {
             for (Ytile = 0; Ytile < this.__MAPHEIGHT; ++Ytile)
             {
                 for (Xtile = 0; Xtile < this.__MAPWIDTH; ++Xtile)
                 {
-                    var tile = this.__LAYERS[layer][Ytile * this.__MAPWIDTH + Xtile]; // get the id for the current tile that we're drawing
 
-                    buffer.image(this.__IMG[tile], this.x + Xtile * this.__TILEWIDTH, this.y + Ytile * this.__TILEHEIGHT);
+                    var Xpos = this.x + Xtile * this.__TILEWIDTH;
+                    var Ypos = this.y + Ytile * this.__TILEHEIGHT
+
+                    // we dont want to render the tiles if they're offscreen, so i've added this in order to make sure that doesn't happen
+
+                    // x   y    w    h
+                    // 50, 100, 150, 200
+                    
+
+                    if (Xpos > 150 + 50) // width
+                        continue;
+                    
+                    if (Ypos > 200 + 100) // height
+                        continue;
+
+                    if (Ypos < 100 - buf) // 0
+                        continue;
+
+                    if (Xpos >= 50 - buf) // 0
+                    {
+                        var tile = this.__LAYERS[layer][Ytile * this.__MAPWIDTH + Xtile]; // get the id for the current tile that we're drawing
+
+                        buffer.image(this.__IMG[tile], Xpos, Ypos);
+                    }
                 }
             }
         }

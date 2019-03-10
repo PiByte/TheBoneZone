@@ -12,11 +12,33 @@ Examples include:
 
  */
 
+/*
+Things you can tweak with these:
+- emission area (area/point where they should come from, if its a larger area, then they will be placed out randomly)
+- direction (0-360 degrees)
+- speed (0 >)
+- color
+- size (they will be drawn as circles)
+- timeout (ms)
+- amount
+
+
+
+
+*/
+
 class Particle
 {
     constructor() // Particle
     {
 
+    }
+
+    /* PRIVATE */
+
+    __DRAW(buffer)
+    {
+        // yeah
     }
 
     // todo, no idea how we should implement this

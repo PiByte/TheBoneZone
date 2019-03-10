@@ -24,6 +24,9 @@ class BoneZone
         background(this.__BG_COLOR);
         frameRate(this.__FPS);
         noSmooth(); // p5.js prevents smooth scaling
+        strokeWeight(4);
+        stroke(0);
+        fill('rgba(0, 0, 0, 0)');
     }
 
     draw(obj)
@@ -38,10 +41,14 @@ class BoneZone
             console.error("This object can not be drawn to the screen!");
     }
 
-    render() // void
+    render(x = 0, y = 0) // void
     {
         // will copy frame buffer onto main canvas
-        image(this.__FRAMEBUFFER, 0, 0, this.__WIDTH * this.__SCALE, this.__HEIGHT * this.__SCALE); // p5js
+        image(this.__FRAMEBUFFER, x, y, this.__WIDTH * this.__SCALE, this.__HEIGHT * this.__SCALE); // p5js
+
+        // draw rect (temp)
+        rect(50, 100, 150, 200);
+
         this.__FRAMEBUFFER.background(this.__BG_COLOR);
     }
 

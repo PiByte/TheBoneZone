@@ -18,7 +18,8 @@ class Game
         Engine.draw(Thang); // players will hopfully be defined in the classes they belong to instead of the main file
         Engine.draw(Skull);
         Engine.draw(Player);
-
+                
+        /*
         if (keyIsDown(UP_ARROW))
         {
             Player.y -= this.player_speed;
@@ -39,6 +40,28 @@ class Game
             Player.x += this.player_speed;
             this.player_direction = 7;
         } // right
+        */
+
+       if (keyIsDown(UP_ARROW))
+       {
+            MainMapOne.y += this.player_speed;
+            this.player_direction = 10;   
+       } // up
+       if (keyIsDown(DOWN_ARROW))
+       {
+            MainMapOne.y -= this.player_speed;
+            this.player_direction = 1;
+       } // down
+       if (keyIsDown(LEFT_ARROW))
+       {
+            MainMapOne.x += this.player_speed;
+            this.player_direction = 4;
+       } // left
+       if (keyIsDown(RIGHT_ARROW))
+       {
+            MainMapOne.x -= this.player_speed;
+            this.player_direction = 7;
+       } // right
 
         if (keyIsPressed === true)
             Player.playAnimation([this.player_direction - 1, this.player_direction, this.player_direction + 1], true, 6);

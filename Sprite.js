@@ -5,16 +5,14 @@ will be able to draw them to screen
 you will also be able to manipulate them in various ways
 */
 
-/*
-TODO:
+// Ammunitionen tog slut till sist, nu kan ni kalla mig för Sundance Kid.
+// The ammunition finally ran out, you can now call me the Sundance Kid.
 
-ADD BACK __IS_PLAYING!!
-
-*/
+var THIS = this;
 
 class Sprite
 {
-    constructor(x, y, img, tag, sheet = false, tileWidth = 16, tileHeight = 16, defaultFrame = 0) // Sprite
+    constructor(x, y, img, tag, sheet = false, tileWidth = 16, tileHeight = 16) // Sprite
     {
         this.x = x; // should be accessable
         this.y = y;
@@ -24,18 +22,26 @@ class Sprite
         this.__SHEET = sheet;
         this.__TILEWIDTH = tileWidth;
         this.__TILEHEIGHT = tileHeight;
-        this.__DEFAULT_FRAME = defaultFrame;
 
-        this.__CURRENT_FRAME = defaultFrame; // current animation frame. This must change at the rate described by this.__FPS
+        this.__CURRENT_FRAME = 0; // current animation frame. This must change at the rate described by this.__FPS
+        this.__CURRENT_SEQUENCE_FRAME = 0;
+        this.__MAX_FRAME = undefined;
         this.__CURRENT_SEQUENCE = [];
-        this.__ANIMATION_TIMER = null;
+        this.__IS_PLAYING = false;
+        this.__LOOP = false;
 
+        // fps thingies - these are for the timings of the animations
+        this.__FPS = 60; // default value
+        this.__NOW = Date.now();
+        this.__THEN = Date.now();
+        this.__INTERVAL = 1000/60;
+        this.__DELTA = 0;
+
+        this.__IMG = [];
 
         // create img array if sheet = true, else just set sprite to img
         if (this.__SHEET)
         {
-            this.__IMG = [];
-
             var x, y;
             var columns = Math.floor(img.width / this.__TILEWIDTH);
             var rows = Math.floor(img.height / this.__TILEHEIGHT);
@@ -49,71 +55,86 @@ class Sprite
             }
         }
         else
-            this.__IMG = img;
+            this.__IMG[0] = img;
     }
 
     // to be added at some point
 
     playAnimation(sequence, loop, fps) // void
     {
-        // Suggestion: get rid of all clearintervals and just never stop the timer??
 
-        // requestAnimationFrame or setInterval ?????
         if (!this.__SHEET)
         {
-            console.error("This sprite doesn't contain a spritesheet");
+            console.error("This sprite doesn't contain a spritesheet!");
             return;
         }
 
-        if (this.__CURRENT_SEQUENCE.length !== 0)
+        if (this.__IS_PLAYING)
         {
-            if (this.__CURRENT_SEQUENCE.toString() == sequence.toString()) // dont judge too hard. apparently you can't compare arrays in js, which is dumb, but ok
-                return;
-            
-            if (this.__ANIMATION_TIMER)
-                clearInterval(this.__ANIMATION_TIMER);
-        }
-            //return; // return if already playing. no need to keep restarting    
-        //clearInterval(__THIS.__ANIMATION_TIMER); // stop animation if one is already running
-
-        this.__CURRENT_SEQUENCE = sequence;
-
-        var sequenceFrame = 0; // where in the sequence we are
-        var maxSequenceFrame = sequence.length - 1;
-
-        var __THIS = this; // redefining so that "this" can be accessed from within the scope of setInterval
-
-        this.__ANIMATION_TIMER = setInterval(function()
-        {
-            __THIS.__CURRENT_FRAME = sequence[sequenceFrame];
-
-            if (sequenceFrame === maxSequenceFrame)
+            // check sequence
+            if (sequence.toString() !== this.__CURRENT_SEQUENCE.toString())
             {
-                // reset
-                sequenceFrame = 0;
-
-                if (!loop)
-                {
-                    __THIS.__CURRENT_SEQUENCE = [];
-                    clearInterval(__THIS.__ANIMATION_TIMER);
-                }
+                // new animation
+                this.__IS_PLAYING = true;
+                this.__CURRENT_FRAME = 0;
+                this.__CURRENT_SEQUENCE_FRAME = 0;
+                this.__MAX_FRAME = sequence.length - 1;
+                this.__LOOP = loop;
+                this.__CURRENT_SEQUENCE = sequence;
+                this.__INTERVAL = 1000/fps;
             }
-            else
-                sequenceFrame++;
 
-        }, 1000 / fps);
+            this.__NOW = Date.now();
+            this.__DELTA = this.__NOW - this.__THEN;
+
+            if (this.__DELTA > this.__INTERVAL)
+            {
+                this.__CURRENT_FRAME = this.__CURRENT_SEQUENCE[this.__CURRENT_SEQUENCE_FRAME]; // this took a while to get right
+
+                if (this.__CURRENT_SEQUENCE_FRAME === this.__MAX_FRAME)
+                {
+                    this.__CURRENT_SEQUENCE_FRAME = 0;
+
+                    if (!this.__LOOP)
+                    {
+                        this.__CURRENT_SEQUENCE = [];
+                        this.__IS_PLAYING = false;
+                    }
+                }
+                else
+                {
+                    this.__CURRENT_SEQUENCE_FRAME++;
+                }
+
+                this.__THEN = this.__NOW - (this.__DELTA % this.__INTERVAL);
+                
+            }
+
+            // advance to next frame and stuff
+        }
+        else
+        {
+            // start new animation
+            this.__IS_PLAYING = true;
+            this.__CURRENT_FRAME = 0;
+            this.__CURRENT_SEQUENCE_FRAME = 0;
+            this.__MAX_FRAME = sequence.length - 1;
+            this.__LOOP = loop;
+            this.__CURRENT_SEQUENCE = sequence;
+            this.__INTERVAL = 1000/fps;
+
+        }
 
     }
     
     stopAnimation(frame = -1) // void
     {
-        if (this.__SHEET && this.__CURRENT_SEQUENCE.legnth != 0)
+        if (this.__SHEET && this.__IS_PLAYING)
         {
-            clearInterval(this.__ANIMATION_TIMER);
             this.__CURRENT_SEQUENCE = [];
             
             if (frame === -1) // reset to either the default frame or frame of your choosing
-                this.__CURRENT_FRAME = this.__DEFAULT_FRAME;
+                this.__CURRENT_FRAME = 0;
             else
                 this.__CURRENT_FRAME = frame;
         }
@@ -140,13 +161,7 @@ class Sprite
     {
         // this is awful
         // draw to buffer (defined in TDZ.js)
-        
-        // temp, will at the moment just draw image
-        if (this.__SHEET)
-        {
-            buffer.image(this.__IMG[this.__CURRENT_FRAME], this.x, this.y); // p5js
-        }
-        else
-            buffer.image(this.__IMG, this.x, this.y); // p5js
+
+        buffer.image(this.__IMG[this.__CURRENT_FRAME], this.x, this.y); // p5js
     }    
 }
